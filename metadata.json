@@ -1,0 +1,7 @@
+{
+  "name": "avryOS",
+  "description": "A high-performance desktop environment simulation blending Ubuntu Unity layout with Windows 11 aesthetics, powered by Gemini AI.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
