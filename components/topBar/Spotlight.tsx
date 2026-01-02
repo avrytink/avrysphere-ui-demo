@@ -144,10 +144,15 @@ export const Spotlight: React.FC = () => {
                 >
                   <div className="flex items-center gap-5">
                     <div className={`
-                      p-3 rounded-full transition-colors
+                      p-3 rounded-full transition-colors flex items-center justify-center overflow-hidden
                       ${selectedIndex === i ? 'bg-white/20' : (isDark ? 'bg-zinc-800 border border-white/5' : 'bg-white/50 border border-black/5')}
+                      ${app.iconImage ? 'w-11 h-11' : ''}
                     `}>
-                      <app.icon size={20} className={selectedIndex === i ? 'text-white' : iconColor} />
+                      {app.iconImage ? (
+                        <img src={app.iconImage} className="w-6 h-6 object-cover rounded-lg" alt={app.title} />
+                      ) : (
+                        <app.icon size={20} className={selectedIndex === i ? 'text-white' : iconColor} />
+                      )}
                     </div>
                     <div>
                       <span className={`text-sm font-bold uppercase tracking-widest ${selectedIndex === i ? 'text-white' : textPrimary}`}>

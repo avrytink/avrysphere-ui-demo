@@ -97,8 +97,12 @@ export const MobileHomeScreen: React.FC = () => {
                 onTouchStart={(e) => e.stopPropagation()}
                 className="flex flex-col items-center gap-1 group active:scale-90 transition-transform duration-200"
               >
-                <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${app.gradient} flex items-center justify-center shadow-lg`}>
-                  <app.icon size={24} className="text-white" />
+                <div className={`w-14 h-14 rounded-full ${app.iconImage ? 'bg-black' : `bg-gradient-to-br ${app.gradient}`} flex items-center justify-center shadow-lg overflow-hidden`}>
+                  {app.iconImage ? (
+                    <img src={app.iconImage} className="w-full h-full object-cover" alt={app.title} />
+                  ) : (
+                    <app.icon size={24} className="text-white" />
+                  )}
                 </div>
                 {/* <span className="text-[10px] text-white/90 drop-shadow-md">{app.title}</span> */}
               </button>

@@ -14,7 +14,9 @@ export enum AppId {
   CALCULATOR = 'calculator',
   MAIL = 'mail',
   HELP = 'help',
+  MAP = 'map',
   FEELING = 'feeling',
+  CAMERA = 'camera',
   CODE_STUDIO = 'code-studio',
   DEV_CENTER = 'dev-center',
   TEAMS = 'teams',
@@ -24,9 +26,9 @@ export enum AppId {
   SHOPPER = 'shopper',
   WEB_TV = 'web-tv',
   CAMPAIGN = 'campaign',
-  PROCESS_MANAGER = 'process-manager',
   MUSIC = 'music',
   VIDEO_PLAYER = 'video-player',
+  WEATHER = 'weather',
   
   // Games
   CYBERPUNK = 'game-cyberpunk',

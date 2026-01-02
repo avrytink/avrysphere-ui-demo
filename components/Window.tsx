@@ -186,9 +186,13 @@ export const Window: React.FC<WindowProps> = ({ window: win, children }) => {
               <div className="window-handle flex-1 h-full flex items-center gap-3" onDoubleClick={() => maximizeWindow(win.instanceId)}>
                 {!isVideoPlayer && app && (
                   <>
-                    <div className={`w-[30px] h-[30px] rounded-full flex items-center justify-center bg-gradient-to-br shadow-lg shrink-0 ${app.gradient}`}>
-                       <app.icon size={14} className="text-white" />
-                    </div>
+            <div className={`p-1 rounded-lg flex items-center justify-center ${app?.iconImage ? '' : (app?.gradient ? `bg-gradient-to-br ${app.gradient}` : 'bg-zinc-700')}`}>
+              {app?.iconImage ? (
+                <img src={app.iconImage} className="w-4 h-4 object-cover rounded-sm" alt={app.title} />
+              ) : (
+                app?.icon && <app.icon size={14} className="text-white" />
+              )}
+            </div>
                     <span className={`text-[13px] font-bold transition-colors ${isActive ? textColor : mutedText}`}>{win.title}</span>
                   </>
                 )}

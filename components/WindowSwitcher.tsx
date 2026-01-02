@@ -83,7 +83,15 @@ export const WindowSwitcher: React.FC = () => {
             >
               {/* Miniature Real Title Bar */}
               <div className={`h-10 flex items-center gap-3 px-4 border-b shrink-0 ${isDark ? 'bg-white/5 border-white/10' : 'bg-zinc-50 border-zinc-100'}`}>
-                 {app && <div className={`w-5 h-5 rounded-full flex items-center justify-center bg-gradient-to-br ${app.gradient} shadow-sm`}><app.icon size={10} className="text-white" /></div>}
+                 {app && (
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center ${app.iconImage ? '' : `bg-gradient-to-br ${app.gradient}`} shadow-sm`}>
+                    {app.iconImage ? (
+                      <img src={app.iconImage} className="w-full h-full object-cover rounded-full" alt={app.title} />
+                    ) : (
+                      <app.icon size={10} className="text-white" />
+                    )}
+                  </div>
+                )}
                  <span className={`text-[11px] font-black uppercase tracking-widest truncate flex-1 ${isDark ? 'text-zinc-200' : 'text-zinc-800'}`}>{win.title}</span>
               </div>
 
@@ -92,8 +100,12 @@ export const WindowSwitcher: React.FC = () => {
                 {win.preview ? (
                   <img src={win.preview} className="w-full h-full object-cover object-top opacity-90" alt="" />
                 ) : (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                     <app.icon size={48} className="text-white/10" />
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden rounded-[2rem]">
+                    {app?.iconImage ? (
+                      <img src={app.iconImage} className="w-48 h-48 object-cover opacity-10" alt="" />
+                    ) : (
+                      app?.icon && <app.icon size={48} className="text-white/10" />
+                    )}
                   </div>
                 )}
               </div>
