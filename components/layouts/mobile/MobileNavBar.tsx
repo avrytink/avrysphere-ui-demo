@@ -3,17 +3,40 @@ import React, { useRef } from 'react';
 import { useWindowStore } from '../../../store/windowStore';
 import { useOSStore } from '../../../store/osStore';
 import { useDockStore } from '../../../store/dockStore';
+import { useSphereStore } from '../../../store/sphereStore';
 
 export const MobileNavBar: React.FC = () => {
   const { minimizeAll } = useWindowStore();
   const { closeAllDockPanels } = useDockStore();
   const { setSwitcherOpen, switcherOpen, closeAllOSPanels } = useOSStore();
+  const { isTablet } = useSphereStore();
+  const { windows, activeWorkspaceId, focusWindow } = useWindowStore();
   
   const startYRef = useRef<number | null>(null);
+  const startXRef = useRef<number | null>(null);
   const currentYRef = useRef<number | null>(null);
+  const currentXRef = useRef<number | null>(null);
   const startTimeRef = useRef<number>(0);
   const isSwitcherTriggeredRef = useRef<boolean>(false);
   const holdTimerRef = useRef<number | undefined>(undefined);
+
+  const switchApp = (direction: 'next' | 'prev') => {
+    const workspaceWindows = windows.filter(w => w.workspaceId === activeWorkspaceId && !w.parentId);
+    if (workspaceWindows.length <= 1) return;
+
+    // Sort by Z-index to get MRU order
+    const sorted = [...workspaceWindows].sort((a, b) => b.zIndex - a.zIndex);
+    const currentIndex = 0; // The active one is always on top (zIndex wise) if we just focused it
+    
+    let targetIndex = direction === 'next' ? currentIndex + 1 : sorted.length - 1;
+    if (targetIndex >= sorted.length) targetIndex = 0;
+
+    const targetWin = sorted[targetIndex];
+    if (targetWin) {
+      focusWindow(targetWin.instanceId);
+      if (navigator.vibrate) navigator.vibrate(10);
+    }
+  };
 
   const goHome = () => {
     // If switcher is open, close it (return to desktop)
@@ -27,9 +50,11 @@ export const MobileNavBar: React.FC = () => {
     }
   };
 
-  const handleStart = (clientY: number) => {
+  const handleStart = (clientX: number, clientY: number) => {
     startYRef.current = clientY;
+    startXRef.current = clientX;
     currentYRef.current = clientY;
+    currentXRef.current = clientX;
     startTimeRef.current = Date.now();
     isSwitcherTriggeredRef.current = false;
 
@@ -52,30 +77,43 @@ export const MobileNavBar: React.FC = () => {
     }, 300); // 300ms hold triggers switcher
   };
 
-  const handleMove = (clientY: number) => {
+  const handleMove = (clientX: number, clientY: number) => {
     currentYRef.current = clientY;
+    currentXRef.current = clientX;
   };
 
-  const handleEnd = (clientY: number) => {
+  const handleEnd = (clientX: number, clientY: number) => {
     if (holdTimerRef.current) clearTimeout(holdTimerRef.current);
 
     // If switcher was triggered by the hold timer, stop here (user just released the hold)
     if (isSwitcherTriggeredRef.current) {
         startYRef.current = null;
+        startXRef.current = null;
         return;
     }
 
-    if (startYRef.current === null) return;
+    if (startYRef.current === null || startXRef.current === null) return;
 
-    const diff = startYRef.current - clientY; // Positive = Swipe Up
+    const diffY = startYRef.current - clientY; // Positive = Swipe Up
+    const diffX = startXRef.current - clientX; // Positive = Swipe Left
     const timeDiff = Date.now() - startTimeRef.current;
 
-    // Logic Decision Tree
-    if (diff > 40) {
+    // Detect horizontal swipe first
+    if (Math.abs(diffX) > 60 && Math.abs(diffY) < 40) {
+      if (diffX > 0) {
+        switchApp('next');
+      } else {
+        switchApp('prev');
+      }
+    } else if (diffY > 40) {
         // It was a swipe up
         if (timeDiff < 250) {
-            // Fast/Rapid swipe -> Go Home
-            goHome();
+            // Fast/Rapid swipe
+            if (isTablet) {
+              setSwitcherOpen(true);
+            } else {
+              goHome();
+            }
         } else {
             // Slow drag but released before hold timer triggered -> Open Switcher
             setSwitcherOpen(true);
@@ -86,7 +124,9 @@ export const MobileNavBar: React.FC = () => {
     }
 
     startYRef.current = null;
+    startXRef.current = null;
     currentYRef.current = null;
+    currentXRef.current = null;
     isSwitcherTriggeredRef.current = false;
   };
 
@@ -95,12 +135,12 @@ export const MobileNavBar: React.FC = () => {
       {/* Invisible larger hit area for easier grabbing */}
       <div 
         className="w-48 h-10 flex items-center justify-center pointer-events-auto cursor-grab active:cursor-grabbing touch-none"
-        onTouchStart={(e) => handleStart(e.touches[0].clientY)}
-        onTouchMove={(e) => handleMove(e.touches[0].clientY)}
-        onTouchEnd={(e) => handleEnd(e.changedTouches[0].clientY)}
-        onMouseDown={(e) => handleStart(e.clientY)}
-        onMouseMove={(e) => e.buttons === 1 && handleMove(e.clientY)}
-        onMouseUp={(e) => handleEnd(e.clientY)}
+        onTouchStart={(e) => handleStart(e.touches[0].clientX, e.touches[0].clientY)}
+        onTouchMove={(e) => handleMove(e.touches[0].clientX, e.touches[0].clientY)}
+        onTouchEnd={(e) => handleEnd(e.changedTouches[0].clientX, e.changedTouches[0].clientY)}
+        onMouseDown={(e) => handleStart(e.clientX, e.clientY)}
+        onMouseMove={(e) => e.buttons === 1 && handleMove(e.clientX, e.clientY)}
+        onMouseUp={(e) => handleEnd(e.clientX, e.clientY)}
       >
         {/* Visible Gesture Pill */}
         <div className="w-32 h-1.5 bg-white/80 rounded-full shadow-[0_2px_4px_rgba(0,0,0,0.4)] backdrop-blur-sm transition-all active:scale-x-90 active:scale-y-110 duration-200" />

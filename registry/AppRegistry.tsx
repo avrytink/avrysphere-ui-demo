@@ -38,7 +38,8 @@ import { AppId } from "../types";
 // App Components imported from their dedicated feature subfolders
 import { AvryAI } from "../apps/avry-ai/AvryAI";
 import { Terminal } from "../apps/terminal/Terminal";
-import { Files, FilesWindowHeader } from "../apps/files/Files";
+import { Files } from "../apps/files/Files";
+import { FilesWindowHeader } from "../apps/files/FilesWindowHeader";
 import { Calculator } from "../apps/calculator/Calculator";
 import { Analytics } from "../apps/analytics/Analytics";
 import { Messages } from "../apps/messages/Messages";
@@ -62,6 +63,7 @@ import { PaperWriter } from "../apps/paper-writer/PaperWriter";
 import { WebStudio } from "../apps/web-studio/WebStudio";
 import { WebTV } from "../apps/web-tv/WebTV";
 import { Browser } from "../apps/browser/Browser";
+import { BrowserWindowHeader } from "../apps/browser/BrowserWindowHeader";
 import { Music } from "../apps/music/Music";
 import { VideoPlayer } from "../apps/video-player/VideoPlayer";
 import { Weather } from "../apps/weather/Weather";
@@ -168,6 +170,7 @@ export const APP_REGISTRY: Record<AppId, AppDefinition> = {
     gradient: "from-cyan-500 to-blue-600",
     title: "Browser",
     iconImage: browserIcon,
+    headerComponent: BrowserWindowHeader,
   },
   [AppId.CALL]: {
     id: AppId.CALL,

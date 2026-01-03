@@ -151,8 +151,6 @@ export const useWindowStore = create<WindowStore>()(
             return;
           }
         }
-        const instanceId = generateId();
-        const nextZ = Math.max(0, ...state.windows.map((w) => w.zIndex)) + 1;
         const width = 1000,
           height = 700;
         const x = (window.innerWidth - width) / 2,
@@ -161,15 +159,21 @@ export const useWindowStore = create<WindowStore>()(
         const { layout, isMobile, isTablet, isTV } = useSphereStore.getState();
         const shouldMaximize =
           layout === DesktopLayout.UNITY || isMobile || isTablet || isTV;
-        const TOP_BAR_HEIGHT = 32;
+        const isSingleWindowMode = isMobile || isTablet || isTV;
+
         const maximizedHeight =
           layout === DesktopLayout.UNITY
             ? window.innerHeight
+            : isTablet || isMobile
+            ? window.innerHeight - 32
             : window.innerHeight - 56;
         const maximizedPositionY =
-          layout === DesktopLayout.UNITY ? 0 : TOP_BAR_HEIGHT - 8;
+          layout === DesktopLayout.UNITY ? 0 : isTablet || isMobile ? 32 : TOP_BAR_HEIGHT - 8;
 
         const savedAppTheme = useAuthStore.getState().currentUser?.settings?.appThemes?.[appId];
+
+        const instanceId = generateId();
+        const nextZ = Math.max(0, ...state.windows.map((w) => w.zIndex)) + 1;
 
         const newWindow: WindowState = {
           instanceId,
@@ -192,10 +196,22 @@ export const useWindowStore = create<WindowStore>()(
           theme: savedAppTheme,
           launchArgs,
         };
-        set({
-          windows: [...state.windows, newWindow],
-          activeInstanceId: instanceId,
-        });
+
+        if (isSingleWindowMode) {
+          // In single window modes, minimize all other windows in this workspace
+          set({
+            windows: state.windows.map(w => 
+              w.workspaceId === currentWS ? { ...w, isMinimized: true } : w
+            ).concat(newWindow),
+            activeInstanceId: instanceId,
+          });
+        } else {
+          set({
+            windows: [...state.windows, newWindow],
+            activeInstanceId: instanceId,
+          });
+        }
+        
         get().focusWindow(instanceId);
         get()._sync();
       },
@@ -278,7 +294,7 @@ export const useWindowStore = create<WindowStore>()(
       },
 
       maximizeWindow: (instanceId) => {
-        const { layout } = useSphereStore.getState();
+        const { layout, isTablet, isMobile, isTV } = useSphereStore.getState();
         const { dockCollapsed } = useDockStore.getState();
         const TOP_BAR_HEIGHT = 32;
         const DOCK_WIDTH =
@@ -287,13 +303,26 @@ export const useWindowStore = create<WindowStore>()(
         const maximizedHeight =
           layout === DesktopLayout.UNITY
             ? window.innerHeight
+            : isTablet || isMobile
+            ? window.innerHeight - 32
             : window.innerHeight - 56;
         const maximizedPositionY =
-          layout === DesktopLayout.UNITY ? 0 : TOP_BAR_HEIGHT - 8;
+          layout === DesktopLayout.UNITY ? 0 : isTablet || isMobile ? 32 : TOP_BAR_HEIGHT - 8;
 
         set((state) => ({
           windows: state.windows.map((w) => {
             if (w.instanceId === instanceId) {
+              if (isTablet || isMobile || isTV) {
+                // Force maximized state in these modes
+                return {
+                  ...w,
+                  isMaximized: true,
+                  x: 0,
+                  y: maximizedPositionY,
+                  width: "100%",
+                  height: maximizedHeight,
+                };
+              }
               const isMax = w.isMaximized;
               return {
                 ...w,
@@ -500,10 +529,14 @@ export const useWindowStore = create<WindowStore>()(
 
         const familyIds = [rootId, ...getDescendants(rootId)];
         const nextZ = Math.max(0, ...state.windows.map((w) => w.zIndex)) + 1;
+        const { isMobile, isTablet, isTV } = useSphereStore.getState();
+        const isSingleWindowMode = isMobile || isTablet || isTV;
 
         set({
           windows: state.windows.map((w) => {
-            if (familyIds.includes(w.instanceId)) {
+            const isTargetFamily = familyIds.includes(w.instanceId);
+            
+            if (isTargetFamily) {
               // Modals should always stay above their parents
               const depth = (id: string, d = 0): number => {
                 const win = state.windows.find((window) => window.instanceId === id);
@@ -514,6 +547,9 @@ export const useWindowStore = create<WindowStore>()(
                 zIndex: nextZ + depth(w.instanceId),
                 isMinimized: false,
               };
+            } else if (isSingleWindowMode && w.workspaceId === state.activeWorkspaceId && !w.parentId) {
+              // If we are in single window mode, minimize others in the same workspace (only top-level windows)
+              return { ...w, isMinimized: true };
             }
             return w;
           }),

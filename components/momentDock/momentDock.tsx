@@ -25,6 +25,8 @@ import { AvryAIPanel } from "./panels/AvryAIPanel";
 import { NotificationsPanel } from "./panels/NotificationsPanel";
 import { ProfilePanel } from "./panels/ProfilePanel";
 import { WorkspacePanel } from "./panels/WorkspacePanel";
+import { UnityDock } from "./UnityDock";
+import { AvryDock } from "./AvryDock";
 
 export const MomentDock: React.FC = () => {
   const {
@@ -60,8 +62,14 @@ export const MomentDock: React.FC = () => {
     addWorkspace,
     openWindow,
   } = useWindowStore();
-  const { currentTrack, isPlaying, togglePlay, nextTrack, prevTrack, mediaType } =
-    useMediaStore();
+  const {
+    currentTrack,
+    isPlaying,
+    togglePlay,
+    nextTrack,
+    prevTrack,
+    mediaType,
+  } = useMediaStore();
 
   const [isHoveringEdge, setIsHoveringEdge] = useState(false);
 
@@ -143,7 +151,7 @@ export const MomentDock: React.FC = () => {
       ref={launcherRef}
       onClick={toggleLauncher}
       className={`${
-        isUnity ? "w-10 h-10" : "w-10 h-10"
+        isUnity ? "w-10 h-10 bg-white/20" : "w-10 h-10"
       } rounded-full flex items-center justify-center transition-all duration-300 ${
         launcherOpen
           ? "bg-blue-600 text-white shadow-lg"
@@ -406,7 +414,7 @@ export const MomentDock: React.FC = () => {
               <div
                 className={`w-10 h-10 rounded-full overflow-hidden border-2 transition-all duration-500 shadow-lg ${
                   isPlaying
-                    ? mediaType === 'video'
+                    ? mediaType === "video"
                       ? "border-blue-500"
                       : "border-red-500 animate-[spin_8s_linear_infinite]"
                     : "border-white/20"
@@ -417,9 +425,12 @@ export const MomentDock: React.FC = () => {
                   className="w-full h-full object-cover"
                   alt="Album"
                 />
-                {mediaType === 'video' && isPlaying && (
+                {mediaType === "video" && isPlaying && (
                   <div className="absolute inset-0 bg-blue-600/20 flex items-center justify-center">
-                    <Play size={16} className="text-white fill-white animate-pulse" />
+                    <Play
+                      size={16}
+                      className="text-white fill-white animate-pulse"
+                    />
                   </div>
                 )}
               </div>
@@ -427,7 +438,9 @@ export const MomentDock: React.FC = () => {
               <div className="absolute bottom-full mb-8 left-1/2 -translate-x-1/2 px-4 py-2 bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl opacity-0 group-hover/media:opacity-100 transition-all pointer-events-none scale-90 group-hover/media:scale-100 whitespace-nowrap z-[1001] shadow-2xl">
                 <div className="flex flex-col items-center gap-0.5">
                   <span className="text-[10px] font-black text-white uppercase tracking-tight">
-                    {mediaType === 'video' ? `VIDEO: ${currentTrack.title}` : currentTrack.title}
+                    {mediaType === "video"
+                      ? `VIDEO: ${currentTrack.title}`
+                      : currentTrack.title}
                   </span>
                   <span className="text-[8px] font-bold text-zinc-400 uppercase tracking-widest">
                     {currentTrack.artist}
@@ -528,7 +541,9 @@ export const MomentDock: React.FC = () => {
       />
       {isUnity ? <UnityDock /> : <AvryDock />}
       {launcherOpen && <LauncherPanel anchorRef={launcherRef} />}
-      {AIPanelOpen && <AvryAIPanel onClose={toggleAIPanel} anchorRef={aiButtonRef} />}
+      {AIPanelOpen && (
+        <AvryAIPanel onClose={toggleAIPanel} anchorRef={aiButtonRef} />
+      )}
       {notificationsOpen && (
         <NotificationsPanel onClose={toggleNotifications} />
       )}

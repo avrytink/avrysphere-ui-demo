@@ -40,24 +40,48 @@ export const TabletLayout: React.FC = () => {
     activeWorkspaceWindows.every((w) => w.isMinimized);
 
   const touchStartY = useRef<number | null>(null);
+  const touchStartX = useRef<number | null>(null);
+
+  const { toggleControlCenter } = useOSStore();
+  const { toggleNotifications } = useDockStore();
 
   // Background Swipe Handlers (e.g. 2-finger swipe on wallpaper)
   const handleTouchStart = (e: React.TouchEvent) => {
-    if (e.touches.length === 2) {
-      touchStartY.current = e.touches[0].clientY;
-    }
+    touchStartY.current = e.touches[0].clientY;
+    touchStartX.current = e.touches[0].clientX;
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartY.current !== null) {
+    if (touchStartY.current !== null && touchStartX.current !== null) {
       const touchEndY = e.changedTouches[0].clientY;
-      const diff = touchStartY.current - touchEndY; // Positive is Swipe Up
+      const touchEndX = e.changedTouches[0].clientX;
+      const diffY = touchStartY.current - touchEndY; 
+      const diffX = touchStartX.current - touchEndX;
 
-      // Threshold for swipe up on background (Workspace Overview)
-      if (diff > 80) {
+      // 1. Two-finger Swipe Up on Background (Workspace Overview)
+      if (e.changedTouches.length === 2 && diffY > 80) {
         setWorkspacePanelOpen(true);
       }
+
+      // 2. Swipe DOWN from Top (iPadOS Style)
+      // Check if start was in the top 50px area
+      if (touchStartY.current < 50 && diffY < -60) {
+        const screenWidth = window.innerWidth;
+        const startX = touchStartX.current;
+
+        if (startX < screenWidth / 3) {
+          // Top Left -> Notifications
+          toggleNotifications();
+          if (navigator.vibrate) navigator.vibrate(10);
+        } else if (startX > (screenWidth * 2) / 3) {
+          // Top Right -> Control Center
+          toggleControlCenter();
+          if (navigator.vibrate) navigator.vibrate(10);
+        }
+      }
+
       touchStartY.current = null;
+      touchStartX.current = null;
     }
   };
 
@@ -143,6 +167,13 @@ export const TabletLayout: React.FC = () => {
 
       {/* Unified Gesture Bar */}
       <MobileNavBar />
+
+      {/* Top Gesture Capture Overlay (iPadOS Style) */}
+      <div 
+        className="fixed top-0 left-0 right-0 h-12 z-[6000] pointer-events-auto bg-transparent touch-none"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      />
     </div>
   );
 };

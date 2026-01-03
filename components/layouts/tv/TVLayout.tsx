@@ -31,13 +31,16 @@ export const TVLayout: React.FC = () => {
   // TV mode forces specific behavior: only show the topmost active window if present
   // Otherwise show dashboard. Explicitly exclude TV_MODE app to avoid recursion.
   const activeWindows = useMemo(() => 
-    windows.filter(w => w.workspaceId === activeWorkspaceId && w.isOpen && !w.isMinimized && w.appId !== AppId.TV_MODE), 
+    windows.filter(w => w.workspaceId === activeWorkspaceId && w.appId !== AppId.TV_MODE), 
   [windows, activeWorkspaceId]);
 
-  // Find the top-most window
-  const activeWindow = activeWindows.length > 0 
-    ? activeWindows.sort((a, b) => b.zIndex - a.zIndex)[0] 
-    : null;
+  // Find the top-most window that is NOT minimized
+  const activeWindow = useMemo(() => {
+    const visible = activeWindows.filter(w => !w.isMinimized);
+    return visible.length > 0 
+      ? visible.sort((a, b) => b.zIndex - a.zIndex)[0] 
+      : null;
+  }, [activeWindows]);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 60000);

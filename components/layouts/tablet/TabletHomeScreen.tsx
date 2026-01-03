@@ -83,35 +83,40 @@ export const TabletHomeScreen: React.FC = () => {
     >
       {/* Tablet Widget Area - Fades out on swipe */}
       <div
-        className={`flex justify-between items-end mb-12 px-16 transition-opacity duration-500 ${
-          currentPage === 0 ? "opacity-100" : "opacity-0 pointer-events-none"
+        className={`flex justify-between items-start mb-12 px-20 transition-all duration-700 ${
+          currentPage === 0 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[-20px] pointer-events-none"
         }`}
       >
-        <div className="flex flex-col">
-          <div className="text-8xl font-thin tracking-tighter text-white drop-shadow-xl select-none">
+        <div className="flex flex-col gap-2">
+          <div className="text-9xl font-black tracking-tighter text-white drop-shadow-2xl select-none leading-none">
             {format(dateTime, "HH:mm")}
           </div>
-          <div className="text-2xl font-medium text-white/80 drop-shadow-md select-none">
+          <div className="text-3xl font-bold text-white/60 tracking-tight select-none ml-2 uppercase">
             {format(dateTime, "EEEE, MMMM d")}
           </div>
         </div>
 
-        <div className="flex gap-6">
-          <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md px-6 py-4 rounded-3xl border border-white/10 shadow-2xl select-none">
-            <Sun size={32} className="text-yellow-400" />
+        <div className="flex flex-col gap-4 mt-4">
+          <div className="flex items-center gap-4 bg-white/5 border border-white/10 backdrop-blur-3xl px-8 py-6 rounded-[2.5rem] shadow-2xl select-none hover:bg-white/10 transition-colors group">
+            <div className="p-3 bg-yellow-500/20 rounded-2xl group-hover:scale-110 transition-transform">
+              <Sun size={36} className="text-yellow-400" />
+            </div>
             <div className="flex flex-col">
-              <span className="text-xl font-bold text-white">72°F</span>
-              <span className="text-xs uppercase font-bold text-zinc-300 tracking-widest">
-                Sunny
+              <span className="text-2xl font-black text-white leading-none">72°F</span>
+              <span className="text-[10px] uppercase font-black text-zinc-400 tracking-[0.2em] mt-1">
+                San Francisco
               </span>
             </div>
           </div>
-          <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md px-6 py-4 rounded-3xl border border-white/10 shadow-2xl select-none">
-            <Calendar size={32} className="text-red-500" />
+          
+          <div className="flex items-center gap-4 bg-white/5 border border-white/10 backdrop-blur-3xl px-8 py-6 rounded-[2.5rem] shadow-2xl select-none hover:bg-white/10 transition-colors group">
+            <div className="p-3 bg-red-500/20 rounded-2xl group-hover:scale-110 transition-transform">
+              <Calendar size={36} className="text-red-500" />
+            </div>
             <div className="flex flex-col">
-              <span className="text-xl font-bold text-white">14:00</span>
-              <span className="text-xs uppercase font-bold text-zinc-300 tracking-widest">
-                Team Sync
+              <span className="text-2xl font-black text-white leading-none">14:00</span>
+              <span className="text-[10px] uppercase font-black text-zinc-400 tracking-[0.2em] mt-1">
+                Executive Sync
               </span>
             </div>
           </div>
@@ -121,13 +126,13 @@ export const TabletHomeScreen: React.FC = () => {
       {/* Swipeable App Grid */}
       <div className="flex-1 relative">
         <div
-          className="absolute inset-0 flex transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)]"
+          className="absolute inset-0 flex transition-transform duration-700 ease-[cubic-bezier(0.2,0.8,0.2,1)]"
           style={{ transform: `translateX(-${currentPage * 100}%)` }}
         >
           {Array.from({ length: totalPages }).map((_, pageIndex) => (
             <div
               key={pageIndex}
-              className="w-full h-full flex-shrink-0 grid grid-cols-5 grid-rows-4 gap-y-10 gap-x-8 px-16 content-start"
+              className="w-full h-full flex-shrink-0 grid grid-cols-6 grid-rows-4 gap-y-12 gap-x-4 px-20 content-start"
             >
               {apps
                 .slice(
@@ -138,10 +143,10 @@ export const TabletHomeScreen: React.FC = () => {
                   <button
                     key={app.id}
                     onClick={() => handleAppClick(app.id)}
-                    className="flex flex-col items-center gap-3 group active:scale-95 transition-transform duration-200"
+                    className="flex flex-col items-center gap-4 group active:scale-90 transition-all duration-300"
                   >
                     <div
-                      className={`w-[70px] h-[70px] rounded-full flex items-center justify-center shadow-2xl ring-1 ring-white/10 group-hover:scale-110 transition-all duration-300 overflow-hidden ${
+                      className={`w-[84px] h-[84px] rounded-full flex items-center justify-center shadow-[0_20px_40px_rgba(0,0,0,0.3)] ring-1 ring-white/10 group-hover:scale-105 group-hover:-translate-y-2 transition-all duration-500 overflow-hidden ${
                         app.iconImage
                           ? "bg-black"
                           : `bg-gradient-to-br ${app.gradient}`
@@ -156,12 +161,12 @@ export const TabletHomeScreen: React.FC = () => {
                         />
                       ) : (
                         <app.icon
-                          size={34}
-                          className="text-white drop-shadow-md"
+                          size={40}
+                          className="text-white drop-shadow-lg"
                         />
                       )}
                     </div>
-                    <span className="text-xs font-medium text-white/90 drop-shadow-md group-hover:text-white transition-colors select-none">
+                    <span className="text-[11px] font-black uppercase tracking-widest text-white/50 group-hover:text-white transition-colors select-none text-center px-2">
                       {app.title}
                     </span>
                   </button>

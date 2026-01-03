@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { useOSStore } from '../../../store/osStore';
 import { useAuthStore } from '../../../store/authStore';
 import { useWindowStore } from '../../../store/windowStore';
@@ -14,7 +14,8 @@ import { MobileHomeScreen } from './MobileHomeScreen';
 import { MobileLauncher } from './MobileLauncher';
 
 export const MobileLayout: React.FC = () => {
-  const { brightness, switcherOpen } = useOSStore();
+  const { brightness, switcherOpen, toggleControlCenter } = useOSStore();
+  const { toggleNotifications } = useDockStore();
   const { currentUser } = useAuthStore();
   const { windows, activeWorkspaceId, workspaces, blurWindows } = useWindowStore();
   const { launcherOpen } = useDockStore();
@@ -22,6 +23,38 @@ export const MobileLayout: React.FC = () => {
   const activeWorkspace = workspaces.find(ws => ws.id === activeWorkspaceId);
   const desktopBackground = activeWorkspace?.background || currentUser?.background || 'https://i.imgur.com/zJ4iCUp.jpeg';
   const activeWorkspaceWindows = windows.filter(w => w.workspaceId === activeWorkspaceId);
+
+  const touchStartY = useRef<number | null>(null);
+  const touchStartX = useRef<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartY.current = e.touches[0].clientY;
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartY.current !== null && touchStartX.current !== null) {
+      const touchEndY = e.changedTouches[0].clientY;
+      const diffY = touchStartY.current - touchEndY; 
+
+      // Swipe DOWN from Top
+      if (touchStartY.current < 50 && diffY < -60) {
+        const screenWidth = window.innerWidth;
+        const startX = touchStartX.current;
+
+        if (startX < screenWidth / 3) {
+          toggleNotifications();
+          if (navigator.vibrate) navigator.vibrate(10);
+        } else if (startX > (screenWidth * 2) / 3) {
+          toggleControlCenter();
+          if (navigator.vibrate) navigator.vibrate(10);
+        }
+      }
+
+      touchStartY.current = null;
+      touchStartX.current = null;
+    }
+  };
 
   const handleDesktopClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -44,7 +77,11 @@ export const MobileLayout: React.FC = () => {
   };
 
   return (
-    <div className="h-screen w-screen overflow-hidden bg-black relative animate-in fade-in duration-1000">
+    <div 
+      className="h-screen w-screen overflow-hidden bg-black relative animate-in fade-in duration-1000"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       <div 
         className="absolute inset-0 bg-cover bg-center transition-all duration-1000 cursor-default"
         style={{ backgroundImage: `url('${desktopBackground}')` }}
@@ -66,21 +103,15 @@ export const MobileLayout: React.FC = () => {
       {/* Dock / Launchers */}
       {launcherOpen && <MobileLauncher />}
       
+      {/* Unified Gesture Bar */}
       <MobileNavBar />
-      
-      <WindowSwitcher />
 
-      <main 
-        className="fixed top-0 bottom-0 left-0 right-0 z-[50] overflow-hidden transition-all duration-700"
-        onClick={handleDesktopClick}
-        style={{ pointerEvents: switcherOpen ? 'none' : 'none' }} 
-      >
-        {activeWorkspaceWindows.map((win) => (
-          <Window key={win.instanceId} window={win}>
-            {renderAppContent(win.appId)}
-          </Window>
-        ))}
-      </main>
+      {/* Top Gesture Capture Overlay (iPadOS Style) */}
+      <div 
+        className="fixed top-0 left-0 right-0 h-12 z-[6000] pointer-events-auto bg-transparent touch-none"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      />
     </div>
   );
 };

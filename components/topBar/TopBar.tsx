@@ -71,7 +71,7 @@ export const TopBar: React.FC = () => {
   };
 
   const barBg = useMemo(() => {
-    if (hasMaximizedWindow && !isMobile && !isTablet) {
+    if (hasMaximizedWindow && !isMobile) {
       return "bg-black border-b border-white/10";
     }
     return isDark
@@ -155,11 +155,17 @@ export const TopBar: React.FC = () => {
 
   if (isMobile || isTablet) {
     return (
-      <div className="fixed top-0 left-0 right-0 h-8 bg-transparent z-[1000] flex items-center justify-between px-6 select-none font-bold text-white text-shadow-sm pointer-events-none">
-        <div className="text-xs tracking-wide drop-shadow-md">
+      <div className="fixed top-0 left-0 right-0 h-10 bg-transparent z-[1000] flex items-center justify-between px-6 select-none font-bold text-white text-shadow-sm">
+        <div 
+          className="text-xs tracking-wide drop-shadow-md cursor-pointer active:opacity-50 py-2"
+          onClick={toggleNotifications}
+        >
           {format(dateTime, "HH:mm", { locale })}
         </div>
-        <div className="flex items-center gap-2 text-white drop-shadow-md">
+        <div 
+          className="flex items-center gap-2 text-white drop-shadow-md cursor-pointer active:opacity-50 py-2"
+          onClick={toggleControlCenter}
+        >
           {wifiEnabled && <Wifi size={14} />}
           <BatteryDisplay />
         </div>

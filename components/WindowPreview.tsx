@@ -32,17 +32,17 @@ export const WindowPreview: React.FC<WindowPreviewProps> = ({
       } ${className}`}
     >
       {/* Preview Content (Full Window) */}
-      <div className="flex-1 relative bg-black/10 overflow-hidden flex items-center justify-center w-full h-full">
+      <div className="flex-1 relative bg-black/10 overflow-hidden w-full h-full">
         {win.preview ? (
           <img
             src={win.preview}
-            className="w-full h-full object-cover object-top opacity-90"
+            className="w-full h-full object-cover object-top opacity-90 block"
             alt={win.title}
           />
         ) : (
           showIconPlaceholder &&
           app && (
-            <div className="opacity-10">
+            <div className="w-full h-full flex items-center justify-center opacity-10">
               {app.iconImage ? (
                 <img
                   src={app.iconImage}

@@ -15,8 +15,11 @@ export const AppIcon: React.FC<AppIconProps> = ({ appId }) => {
   const { openWindow, windows, activeInstanceId, focusWindow } =
     useWindowStore();
   const { dockCollapsed } = useDockStore();
-  const { layout } = useSphereStore();
+  const { theme } = useOSStore();
+  const { layout, isTablet } = useSphereStore();
   const [showPreview, setShowPreview] = useState(false);
+
+  const isDark = theme === "dark";
   const timeoutRef = useRef<any>(null);
   const app = APP_REGISTRY[appId];
 
@@ -37,7 +40,7 @@ export const AppIcon: React.FC<AppIconProps> = ({ appId }) => {
 
   const handleMouseEnter = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    if (isOpen) setShowPreview(true);
+    if (isOpen && !isTablet) setShowPreview(true);
   };
 
   const handleMouseLeave = () => {
@@ -50,22 +53,28 @@ export const AppIcon: React.FC<AppIconProps> = ({ appId }) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Active Indicator Logic - Positioned outside the icon - White Color */}
+      {/* Active Indicator Logic - Positioned outside the icon - Theme Aware */}
       {isOpen &&
         (isUnity ? (
           <div
             className={`absolute left-[-2px] w-2 transition-all duration-500 rounded-r-md z-10 ${
               isActive
-                ? "h-4 bg-white shadow-[0_0_10px_rgba(255,255,255,0.4)]"
-                : "h-2 bg-white/20"
+                ? `${
+                    isDark ? "bg-white" : "bg-black"
+                  } shadow-[0_0_10px_rgba(255,255,255,0.4)] h-4`
+                : `${isDark ? "bg-white/20" : "bg-black/20"} h-2`
             }`}
           />
         ) : (
           <div
-            className={`absolute -bottom-2 h-1 transition-all duration-500 rounded-full z-10 ${
+            className={`absolute transition-all duration-500 rounded-full z-10 ${
+              isTablet ? "-bottom-1.5" : "-bottom-2"
+            } ${
               isActive
-                ? "w-3 bg-white shadow-[0_0_10px_rgba(255,255,255,0.4)]"
-                : "w-1.5 bg-white/20"
+                ? `w-3 ${isDark ? "bg-white" : "bg-black"} shadow-[0_0_10px_${
+                    isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.2)"
+                  }] h-1`
+                : `w-1.5 ${isDark ? "bg-white/20" : "bg-black/20"} h-1`
             }`}
           />
         ))}
@@ -80,7 +89,7 @@ export const AppIcon: React.FC<AppIconProps> = ({ appId }) => {
           }
         }}
         className={`
-          relative transition-all duration-300 shadow-xl overflow-hidden rounded-full
+          relative transition-all duration-300 shadow-xl overflow-hidden ${isTablet ? "rounded-full" : "rounded-full"}
           ${isUnity ? "w-10 h-10" : "w-10 h-10"}
           ${
             isActive
@@ -112,7 +121,7 @@ export const AppIcon: React.FC<AppIconProps> = ({ appId }) => {
       {showPreview && !dockCollapsed && (
         <div
           className={`absolute px-4 py-4 bg-black/40 backdrop-blur-3xl border border-white/10 rounded-2xl z-[1001] shadow-2xl animate-in fade-in zoom-in-95 duration-200 ${
-            isUnity ? "left-14" : "bottom-14"
+            isUnity ? "left-14" : isTablet ? "bottom-28" : "bottom-14"
           }`}
         >
           <div className="text-xs font-bold text-white mb-3 border-b border-white/5 pb-2">
@@ -139,7 +148,7 @@ export const AppIcon: React.FC<AppIconProps> = ({ appId }) => {
       )}
 
       {/* Tooltip */}
-      {!dockCollapsed && !showPreview && (
+      {!dockCollapsed && !showPreview && !isTablet && (
         <div
           className={`absolute px-3 py-2 bg-zinc-900/40 backdrop-blur-md border border-white/10 rounded-xl text-xs font-medium text-white opacity-0 group-hover:opacity-100 pointer-events-none transition-all z-[1001] shadow-2xl ${
             isUnity
