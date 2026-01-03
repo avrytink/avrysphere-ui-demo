@@ -1,9 +1,10 @@
 
 import React, { useState } from 'react';
 import { useOSStore } from '../../store/osStore';
+import { useTheme } from '../../components/Window';
 
 export const Calculator: React.FC = () => {
-  const { theme } = useOSStore();
+  const theme = useTheme();
   const [display, setDisplay] = useState('0');
   const [equation, setEquation] = useState('');
 

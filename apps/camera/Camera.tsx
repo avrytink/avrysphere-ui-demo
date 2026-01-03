@@ -5,9 +5,10 @@ import {
   X, FlipHorizontal, Square
 } from 'lucide-react';
 import { useOSStore } from '../../store/osStore';
+import { useTheme } from '../../components/Window';
 
 export const Camera: React.FC = () => {
-  const { theme } = useOSStore();
+  const theme = useTheme();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [mode, setMode] = useState<'photo' | 'video'>('photo');

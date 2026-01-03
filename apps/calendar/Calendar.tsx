@@ -1,23 +1,18 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 // Fixed: Removed startOfMonth and subMonths from date-fns import as they were reported as missing. 
 // Replaced subMonths functionality with addMonths(date, -1).
 import { format, endOfMonth, eachDayOfInterval, isSameMonth, isToday, addMonths } from 'date-fns';
 import { useOSStore } from '../../store/osStore';
+import { useTheme } from '../../components/Window';
 
-// Fixed: Added local implementation of startOfMonth to resolve missing export error.
-const getStartOfMonth = (date: Date) => {
-  const d = new Date(date.getFullYear(), date.getMonth(), 1);
-  d.setHours(0, 0, 0, 0);
-  return d;
-};
+const getStartOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth(), 1);
 
 export const Calendar: React.FC = () => {
-  const { theme } = useOSStore();
-  const [currentDate, setCurrentDate] = React.useState(new Date());
-
+  const theme = useTheme();
   const isDark = theme === 'dark';
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   const days = eachDayOfInterval({
     // Fixed: used local getStartOfMonth

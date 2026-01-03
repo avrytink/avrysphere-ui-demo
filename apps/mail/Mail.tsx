@@ -2,17 +2,17 @@
 import React, { useState } from 'react';
 import { Mail as MailIcon, Inbox, Send, Trash2, Star, Archive, Search, Menu } from 'lucide-react';
 import { useOSStore } from '../../store/osStore';
+import { useTheme } from '../../components/Window';
 
 export const Mail: React.FC = () => {
-  const { theme } = useOSStore();
+  const theme = useTheme();
+  const isDark = theme === 'dark';
   const [selectedMail, setSelectedMail] = useState(0);
   const emails = [
-    { from: 'GitHub Enterprise', subject: 'avryOS: Security Alert', body: 'Potential vulnerability detected in dependencies...', time: '12:05 PM', read: false },
-    { from: 'DigitalOcean', subject: 'Invoice for October 2024', body: 'Your invoice is ready for download. Total: $42.00', time: 'Yesterday', read: true },
-    { from: 'Vercel', subject: 'Deployment Successful', body: 'The latest build of your project is now live at avryos.io', time: 'Oct 24', read: true },
+    { from: 'CORE SYSTEM', subject: 'Kernel v6.5.0 Deployment', time: '10:42 AM', body: 'The latest kernel update has been successfully deployed to all neural nodes. System integrity is stable.', read: false },
+    { from: 'GEMINI AI', subject: 'Handshake Protocol Verified', time: '09:15 AM', body: 'Deep link established with Gemini-2.0-Flash. All analytical modalities are online and awaiting instructions.', read: true },
+    { from: 'SECURITY HUB', subject: 'Unrecognized Login Attempt', time: 'Yesterday', body: 'A minor handshake deviation was detected in Workspace-B. Access was automatically denied. No action required.', read: true },
   ];
-
-  const isDark = theme === 'dark';
 
   return (
     <div className={`flex flex-col md:flex-row h-full text-sm ${isDark ? 'bg-black' : 'bg-white'}`}>

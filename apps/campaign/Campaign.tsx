@@ -2,9 +2,10 @@
 import React from 'react';
 import { Megaphone, Target, MousePointer2, TrendingUp, Filter } from 'lucide-react';
 import { useOSStore } from '../../store/osStore';
+import { useTheme } from '../../components/Window';
 
 export const Campaign: React.FC = () => {
-  const { theme } = useOSStore();
+  const theme = useTheme();
   const metrics = [
     { label: 'Active Campaigns', val: '12', icon: Megaphone },
     { label: 'Total Reach', val: '1.2M', icon: Target },

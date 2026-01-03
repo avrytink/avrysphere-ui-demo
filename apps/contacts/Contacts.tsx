@@ -2,9 +2,10 @@
 import React, { useState } from 'react';
 import { Search, User, Mail, Phone, MapPin, Plus } from 'lucide-react';
 import { useOSStore } from '../../store/osStore';
+import { useTheme } from '../../components/Window';
 
 export const Contacts: React.FC = () => {
-  const { theme } = useOSStore();
+  const theme = useTheme();
   const [selected, setSelected] = useState(0);
   const contacts = [
     { name: 'ALEX RIVERA', role: 'CORE DEV', email: 'alex@avryos.local', phone: '+1 555-0101', city: 'San Francisco' },

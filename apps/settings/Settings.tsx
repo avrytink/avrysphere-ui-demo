@@ -43,6 +43,7 @@ import {
 } from "lucide-react";
 import { useOSStore } from "../../store/osStore";
 import { useAuthStore } from "../../store/authStore";
+import { useTheme } from "../../components/Window";
 import { useUserStore } from "../../store/userStore";
 import { useI18nStore, Language } from "../../store/i18nStore";
 import { useSphereStore } from "../../store/sphereStore";
@@ -75,7 +76,8 @@ const ACCENTS = [
 ];
 
 export const Settings: React.FC = () => {
-  const { theme, setTheme, accentColor, setSettings, brightness } =
+  const theme = useTheme();
+  const { setTheme, accentColor, setSettings, brightness } =
     useOSStore();
   const {
     currentUser,

@@ -1,6 +1,6 @@
 
 import { create } from 'zustand';
-import { UserStore, User, UserRole, Permission, RoleConfig, DesktopLayout, Organization } from '../types';
+import { UserStore, User, UserRole, Permission, RoleConfig, DesktopLayout, Organization, OSMode } from '../types';
 
 const INITIAL_ROLES: RoleConfig[] = [
   {
@@ -63,6 +63,7 @@ const MOCK_USERS: User[] = [
     organizationIds: ['org-avry', 'org-unity', 'org-design', 'org-data'], // Reduced to 4 orgs
     settings: {
       layout: DesktopLayout.AVRY,
+      mode: OSMode.DESKTOP,
       theme: 'dark',
       accentColor: '#3B82F6',
       brightness: 100,
@@ -82,6 +83,7 @@ const MOCK_USERS: User[] = [
     organizationIds: ['org-unity', 'org-avry'],
     settings: {
       layout: DesktopLayout.AVRY,
+      mode: OSMode.DESKTOP,
       theme: 'dark',
       accentColor: '#10B981',
       brightness: 80,
@@ -101,6 +103,7 @@ const MOCK_USERS: User[] = [
     organizationIds: ['org-design', 'org-avry'],
     settings: {
       layout: DesktopLayout.AVRY,
+      mode: OSMode.DESKTOP,
       theme: 'dark',
       accentColor: '#6366F1',
       brightness: 90,
@@ -120,6 +123,7 @@ const MOCK_USERS: User[] = [
     organizationIds: ['org-data', 'org-avry'],
     settings: {
       layout: DesktopLayout.AVRY,
+      mode: OSMode.DESKTOP,
       theme: 'dark',
       accentColor: '#F59E0B',
       brightness: 85,
@@ -139,6 +143,7 @@ const MOCK_USERS: User[] = [
     organizationIds: ['org-market', 'org-avry'],
     settings: {
       layout: DesktopLayout.UNITY,
+      mode: OSMode.DESKTOP,
       theme: 'light',
       accentColor: '#EC4899',
       brightness: 95,
@@ -158,6 +163,7 @@ const MOCK_USERS: User[] = [
     organizationIds: ['org-support', 'org-avry'],
     settings: {
       layout: DesktopLayout.AVRY,
+      mode: OSMode.DESKTOP,
       theme: 'dark',
       accentColor: '#14B8A6',
       brightness: 70,
@@ -177,6 +183,7 @@ const MOCK_USERS: User[] = [
     organizationIds: ['org-sales'],
     settings: {
       layout: DesktopLayout.UNITY,
+      mode: OSMode.DESKTOP,
       theme: 'light',
       accentColor: '#EF4444',
       brightness: 100,
@@ -196,6 +203,7 @@ const MOCK_USERS: User[] = [
     organizationIds: ['org-eng'],
     settings: {
       layout: DesktopLayout.AVRY,
+      mode: OSMode.DESKTOP,
       theme: 'dark',
       accentColor: '#6366F1',
       brightness: 60,
@@ -215,6 +223,7 @@ const MOCK_USERS: User[] = [
     organizationIds: ['org-hr'],
     settings: {
       layout: DesktopLayout.UNITY,
+      mode: OSMode.DESKTOP,
       theme: 'light',
       accentColor: '#8B5CF6',
       brightness: 90,
@@ -234,6 +243,7 @@ const MOCK_USERS: User[] = [
     organizationIds: ['org-finance'],
     settings: {
       layout: DesktopLayout.AVRY,
+      mode: OSMode.DESKTOP,
       theme: 'dark',
       accentColor: '#10B981',
       brightness: 95,

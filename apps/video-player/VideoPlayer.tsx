@@ -34,17 +34,19 @@ const METADATA = {
 };
 
 export const VideoPlayer: React.FC = () => {
-  const { setTrack, setPlaying, isPlaying, togglePlay } = useMediaStore();
+  const { setTrack, setPlaying, isPlaying, setMediaType } = useMediaStore();
   const playerRef = useRef<APITypes>(null);
 
   // Sync Global State -> Player
   useEffect(() => {
     // When the component mounts, tell the global store about this track
     setTrack(METADATA);
+    setMediaType('video', AppId.VIDEO_PLAYER);
     
     // Cleanup on unmount (pause global media if we close window)
     return () => {
       setPlaying(false);
+      setMediaType('audio', null);
     };
   }, []);
 

@@ -6,29 +6,24 @@ import {
   ChevronRight, MoreHorizontal, Square, RefreshCw
 } from 'lucide-react';
 import { useOSStore } from '../../store/osStore';
+import { useTheme } from '../../components/Window';
 import { useWindowStore } from '../../store/windowStore';
-import { useUserStore } from '../../store/userStore';
+import { useAuthStore } from '../../store/authStore';
 import { APP_REGISTRY } from '../../registry/AppRegistry';
 
 type Tab = 'processes' | 'performance' | 'users' | 'details' | 'services';
 
 export const Feeling: React.FC = () => {
-  const { theme } = useOSStore();
+  const theme = useTheme();
+  const isDark = theme === 'dark';
   const { windows, closeWindow, focusWindow } = useWindowStore();
-  const { currentUser } = useUserStore();
+  const { currentUser } = useAuthStore();
+  const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<Tab>('processes');
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [cpuHistory, setCpuHistory] = useState<number[]>(Array(60).fill(0));
-  const [memHistory, setMemHistory] = useState<number[]>(Array(60).fill(0));
-  const [vitals, setVitals] = useState({
-    cpu: 12.5,
-    memory: 8.4,
-    disk: 2,
-    network: 0.1
-  });
-
-  const isDark = theme === 'dark';
+  const [vitals, setVitals] = useState({ cpu: 12, memory: 8.4, disk: 2, network: 0.5 });
+  const [cpuHistory, setCpuHistory] = useState<number[]>(Array(60).fill(0).map(() => Math.random() * 20 + 10));
+  const [memHistory, setMemHistory] = useState<number[]>(Array(60).fill(0).map(() => Math.random() * 5 + 30));
 
   // Simulate real-time updates
   useEffect(() => {

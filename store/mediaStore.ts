@@ -25,6 +25,8 @@ interface MediaState {
   currentTrack: Track;
   progress: number;
   volume: number;
+  mediaType: 'audio' | 'video';
+  activeAppId: string | null;
   spotifyToken: string | null;
   searchResults: Track[];
   radioStations: Track[];
@@ -32,6 +34,7 @@ interface MediaState {
   
   togglePlay: () => void;
   setPlaying: (playing: boolean) => void;
+  setMediaType: (type: 'audio' | 'video', appId: string | null) => void;
   nextTrack: () => void;
   prevTrack: () => void;
   setTrack: (track: Track) => void;
@@ -60,6 +63,8 @@ export const useMediaStore = create<MediaState>()(
       currentTrack: MOCK_TRACKS[0],
       progress: 0,
       volume: 75,
+      mediaType: 'audio',
+      activeAppId: null,
       spotifyToken: null,
       searchResults: [],
       radioStations: [],
@@ -67,6 +72,8 @@ export const useMediaStore = create<MediaState>()(
 
       togglePlay: () => set((state) => ({ isPlaying: !state.isPlaying })),
       setPlaying: (playing) => set({ isPlaying: playing }),
+
+      setMediaType: (type, appId) => set({ mediaType: type, activeAppId: appId }),
       
       nextTrack: () => {
         const { currentTrack, searchResults, radioStations } = get();
@@ -197,7 +204,9 @@ export const useMediaStore = create<MediaState>()(
       partialize: (state) => ({ 
         volume: state.volume, 
         spotifyToken: state.spotifyToken,
-        currentTrack: state.currentTrack 
+        currentTrack: state.currentTrack,
+        mediaType: state.mediaType,
+        activeAppId: state.activeAppId
       }), 
     }
   )

@@ -2,25 +2,13 @@
 import React, { useState } from 'react';
 import { Code, Folder, Database, FileCode, Play, Save, Share2 } from 'lucide-react';
 import { useOSStore } from '../../store/osStore';
+import { useTheme } from '../../components/Window';
 
 export const CodeStudio: React.FC = () => {
-  const { theme } = useOSStore();
-  const [activeFile, setActiveFile] = useState('kernel.sys');
-  const [code, setCode] = useState(`/* avryOS Kernel v1.0.0 */
-import { initialize } from '@avry/core';
-
-export async function boot() {
-  const kernel = await initialize({
-    memory: '32GiB',
-    threading: 'dynamic',
-    security: 'max'
-  });
-
-  console.log("Kernel sequence stabilized.");
-  return kernel.run();
-}`);
-
+  const theme = useTheme();
   const isDark = theme === 'dark';
+  const [activeFile, setActiveFile] = useState('kernel.sys');
+  const [code, setCode] = useState('// avryOS Kernel Protocol\n// Version 6.5.0-STABLE\n\nasync function bootIdentityLayer(userId: string) {\n  const auth = await sys.handshake(userId);\n  if (auth.success) {\n    return await modality.initialize(auth.token);\n  }\n  throw new Error("Handshake Failed");\n}\n\n// System entry point\nexport default bootIdentityLayer;');
 
   return (
     <div className={`h-full flex flex-col font-mono text-xs ${isDark ? 'bg-[#050505]' : 'bg-white'}`}>

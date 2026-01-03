@@ -2,9 +2,10 @@
 import React from 'react';
 import { Globe, Shield, Zap, Layout, Monitor, ArrowUpRight, Plus, MoreHorizontal } from 'lucide-react';
 import { useOSStore } from '../../store/osStore';
+import { useTheme } from '../../components/Window';
 
 export const WebStudio: React.FC = () => {
-  const { theme } = useOSStore();
+  const theme = useTheme();
   const isDark = theme === 'dark';
 
   const sites = [

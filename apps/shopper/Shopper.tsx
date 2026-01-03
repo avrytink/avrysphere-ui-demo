@@ -2,9 +2,10 @@
 import React from 'react';
 import { ShoppingBag, DollarSign, Package, Users, ArrowUpRight } from 'lucide-react';
 import { useOSStore } from '../../store/osStore';
+import { useTheme } from '../../components/Window';
 
 export const Shopper: React.FC = () => {
-  const { theme } = useOSStore();
+  const theme = useTheme();
   const isDark = theme === 'dark';
 
   return (

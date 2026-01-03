@@ -2,9 +2,10 @@
 import React from 'react';
 import { HelpCircle, Book, MessageSquare, Terminal, Shield, Globe } from 'lucide-react';
 import { useOSStore } from '../../store/osStore';
+import { useTheme } from '../../components/Window';
 
 export const Help: React.FC = () => {
-  const { theme } = useOSStore();
+  const theme = useTheme();
   const isDark = theme === 'dark';
 
   const categories = [

@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { useMediaStore, MOCK_TRACKS } from "../../store/mediaStore";
 import { useOSStore } from "../../store/osStore";
+import { useTheme } from "../../components/Window";
 
 const GENRES = [
   "Pop",
@@ -39,7 +40,7 @@ const GENRES = [
 ];
 
 export const Music: React.FC = () => {
-  const { theme } = useOSStore();
+  const theme = useTheme();
   const {
     currentTrack,
     isPlaying,
@@ -58,6 +59,7 @@ export const Music: React.FC = () => {
     fetchRadio,
     isSearching,
     clearSearch,
+    setMediaType,
   } = useMediaStore();
 
   const [activeTab, setActiveTab] = useState("LISTEN_NOW");
@@ -67,6 +69,11 @@ export const Music: React.FC = () => {
   const [activeGenre, setActiveGenre] = useState<string | null>(null);
 
   const isDark = theme === "dark";
+
+  // Identify as audio player
+  useEffect(() => {
+    setMediaType("audio", AppId.MUSIC);
+  }, []);
 
   // Initial load for Radio tab
   useEffect(() => {

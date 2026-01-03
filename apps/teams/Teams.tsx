@@ -2,9 +2,10 @@
 import React, { useState } from 'react';
 import { Users2, Hash, Video, Bell, Search, MoreVertical, AtSign, Settings, Plus } from 'lucide-react';
 import { useOSStore } from '../../store/osStore';
+import { useTheme } from '../../components/Window';
 
 export const Teams: React.FC = () => {
-  const { theme } = useOSStore();
+  const theme = useTheme();
   const [activeChannel, setActiveChannel] = useState('general');
   const channels = ['general', 'development', 'design-ops', 'marketing'];
   const users = [

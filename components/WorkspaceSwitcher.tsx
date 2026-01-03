@@ -4,6 +4,7 @@ import { useWindowStore } from '../store/windowStore';
 import { useDockStore } from '../store/dockStore';
 import { useOSStore } from '../store/osStore';
 import { APP_REGISTRY } from '../registry/AppRegistry';
+import { WindowPreview } from './WindowPreview';
 import { X, Plus, Trash2, Search } from 'lucide-react';
 
 export const WorkspaceSwitcher: React.FC = () => {
@@ -83,30 +84,21 @@ export const WorkspaceSwitcher: React.FC = () => {
                     return (
                       <div 
                         key={win.instanceId}
-                        onClick={(e) => {
+                        className="relative group/win transition-all duration-300 hover:scale-105 hover:z-20"
+                        style={{ width: '22%', aspectRatio: '1.5' }}
+                      >
+                        <WindowPreview
+                          win={win}
+                          isDark={isDark}
+                          isActive={false}
+                          className="w-full h-full"
+                          onClick={(e) => {
                             e.stopPropagation();
                             setActiveWorkspace(ws.id);
                             focusWindow(win.instanceId);
                             toggleWorkspacePanel();
-                        }}
-                        className="relative group/win transition-all duration-300 hover:scale-105 hover:z-20"
-                        style={{ width: '22%', aspectRatio: '1.5' }}
-                      >
-                        <div className={`w-full h-full rounded-xl overflow-hidden shadow-2xl border flex flex-col ${isDark ? 'bg-zinc-900 border-white/10' : 'bg-white border-black/5'}`}>
-                            {/* Mini Title Bar */}
-                            <div className={`h-[12%] min-h-[8px] w-full flex items-center px-2 gap-1 ${isDark ? 'bg-white/5' : 'bg-black/5'}`} />
-                            
-                            {/* Content Preview */}
-                            <div className="flex-1 relative bg-black/5 overflow-hidden">
-                               {win.preview ? (
-                                  <img src={win.preview} className="w-full h-full object-cover opacity-90" alt="" />
-                               ) : (
-                                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-transparent to-black/5">
-                                     <app.icon size={24} className="opacity-10" />
-                                  </div>
-                               )}
-                            </div>
-                        </div>
+                          }}
+                        />
 
                         {/* Floating App Icon Badge - Bottom Center Overlay */}
                         <div className={`absolute -bottom-4 left-1/2 -translate-x-1/2 shadow-xl rounded-2xl p-2 border border-white/10 transform transition-transform group-hover/win:scale-110 z-30 ${app.iconImage ? 'bg-black' : `bg-gradient-to-br ${app.gradient}`}`}>

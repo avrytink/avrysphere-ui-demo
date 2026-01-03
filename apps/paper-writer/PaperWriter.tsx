@@ -2,9 +2,10 @@
 import React from 'react';
 import { FileEdit, Eye, Trash2, Search, Plus, Calendar } from 'lucide-react';
 import { useOSStore } from '../../store/osStore';
+import { useTheme } from '../../components/Window';
 
 export const PaperWriter: React.FC = () => {
-  const { theme } = useOSStore();
+  const theme = useTheme();
   const isDark = theme === 'dark';
 
   const articles = [

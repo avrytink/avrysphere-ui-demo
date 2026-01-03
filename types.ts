@@ -1,91 +1,90 @@
-
 export enum AppId {
-  AVRY_AI = 'avry-ai',
-  TERMINAL = 'terminal',
-  SETTINGS = 'settings',
-  BROWSER = 'browser',
-  FILES = 'files',
-  CALL = 'call',
-  MESSAGES = 'messages',
-  CALENDAR = 'calendar',
-  TEXT_EDITOR = 'text-editor',
-  CONTACTS = 'contacts',
-  PAPER_NOTES = 'paper-notes',
-  CALCULATOR = 'calculator',
-  MAIL = 'mail',
-  HELP = 'help',
-  MAP = 'map',
-  FEELING = 'feeling',
-  CAMERA = 'camera',
-  CODE_STUDIO = 'code-studio',
-  DEV_CENTER = 'dev-center',
-  TEAMS = 'teams',
-  ANALYTICS = 'analytics',
-  PAPER_WRITER = 'paper-writer',
-  WEB_STUDIO = 'web-studio',
-  SHOPPER = 'shopper',
-  WEB_TV = 'web-tv',
-  CAMPAIGN = 'campaign',
-  MUSIC = 'music',
-  VIDEO_PLAYER = 'video-player',
-  WEATHER = 'weather',
-  
+  AVRY_AI = "avry-ai",
+  TERMINAL = "terminal",
+  SETTINGS = "settings",
+  BROWSER = "browser",
+  FILES = "files",
+  CALL = "call",
+  MESSAGES = "messages",
+  CALENDAR = "calendar",
+  TEXT_EDITOR = "text-editor",
+  CONTACTS = "contacts",
+  PAPER_NOTES = "paper-notes",
+  CALCULATOR = "calculator",
+  MAIL = "mail",
+  HELP = "help",
+  MAP = "map",
+  FEELING = "feeling",
+  CAMERA = "camera",
+  CODE_STUDIO = "code-studio",
+  DEV_CENTER = "dev-center",
+  TEAMS = "teams",
+  ANALYTICS = "analytics",
+  PAPER_WRITER = "paper-writer",
+  WEB_STUDIO = "web-studio",
+  SHOPPER = "shopper",
+  WEB_TV = "web-tv",
+  CAMPAIGN = "campaign",
+  MUSIC = "music",
+  VIDEO_PLAYER = "video-player",
+  WEATHER = "weather",
+
   // Games
-  CYBERPUNK = 'game-cyberpunk',
-  ELDEN_RING = 'game-elden-ring',
-  GOW_RAGNAROK = 'game-gow',
-  SPIDERMAN_2 = 'game-spiderman',
-  COD_MW3 = 'game-cod',
-  BALDURS_GATE = 'game-bg3',
-  STARFIELD = 'game-starfield',
-  FF_XVI = 'game-ff16',
-  GTA_V = 'game-gta5',
-  FORTNITE = 'game-fortnite',
+  CYBERPUNK = "game-cyberpunk",
+  ELDEN_RING = "game-elden-ring",
+  GOW_RAGNAROK = "game-gow",
+  SPIDERMAN_2 = "game-spiderman",
+  COD_MW3 = "game-cod",
+  BALDURS_GATE = "game-bg3",
+  STARFIELD = "game-starfield",
+  FF_XVI = "game-ff16",
+  GTA_V = "game-gta5",
+  FORTNITE = "game-fortnite",
 
   // Modes
-  TABLET_MODE = 'tablet-mode',
-  DESKTOP_MODE = 'desktop-mode',
-  TV_MODE = 'tv-mode',
-  GAME_MODE = 'game-mode'
+  TABLET_MODE = "tablet-mode",
+  DESKTOP_MODE = "desktop-mode",
+  TV_MODE = "tv-mode",
+  GAME_MODE = "game-mode",
 }
 
 export enum DesktopLayout {
-  UNITY = 'unity',
-  AVRY = 'avry'
+  UNITY = "unity",
+  AVRY = "avry",
 }
 
-export type Theme = 'light' | 'dark';
+export type Theme = "light" | "dark";
 
-export type UserRole = 'superadmin' | 'admin' | 'member' | 'invited' | string;
+export type UserRole = "superadmin" | "admin" | "member" | "invited" | string;
 
 export enum Permission {
-  USER_MANAGEMENT = 'USER_MANAGEMENT',
-  ROLE_CONFIGURATION = 'ROLE_CONFIGURATION',
-  TERMINAL_ACCESS = 'TERMINAL_ACCESS',
-  SYSTEM_SETTINGS = 'SYSTEM_SETTINGS',
-  WORKSPACE_MODIFICATION = 'WORKSPACE_MODIFICATION'
+  USER_MANAGEMENT = "USER_MANAGEMENT",
+  ROLE_CONFIGURATION = "ROLE_CONFIGURATION",
+  TERMINAL_ACCESS = "TERMINAL_ACCESS",
+  SYSTEM_SETTINGS = "SYSTEM_SETTINGS",
+  WORKSPACE_MODIFICATION = "WORKSPACE_MODIFICATION",
 }
 
 export enum SnapType {
-  NONE = 'none',
-  FULL = 'full',
-  LEFT = 'left',
-  RIGHT = 'right',
-  TOP_LEFT = 'top-left',
-  TOP_RIGHT = 'top-right',
-  BOTTOM_LEFT = 'bottom-left',
-  BOTTOM_RIGHT = 'bottom-right',
+  NONE = "none",
+  FULL = "full",
+  LEFT = "left",
+  RIGHT = "right",
+  TOP_LEFT = "top-left",
+  TOP_RIGHT = "top-right",
+  BOTTOM_LEFT = "bottom-left",
+  BOTTOM_RIGHT = "bottom-right",
   // Advanced Patterns
-  LEFT_TWO_THIRDS = 'left-2-3',
-  RIGHT_ONE_THIRD = 'right-1-3',
-  THIRD_LEFT = 'third-left',
-  THIRD_CENTER = 'third-center',
-  THIRD_RIGHT = 'third-right',
-  COL3_L25 = 'col3-l25',
-  COL3_C50 = 'col3-c50',
-  COL3_R25 = 'col3-r25',
-  RIGHT_TOP_QUARTER = 'right-t-q',
-  RIGHT_BOTTOM_QUARTER = 'right-b-q'
+  LEFT_TWO_THIRDS = "left-2-3",
+  RIGHT_ONE_THIRD = "right-1-3",
+  THIRD_LEFT = "third-left",
+  THIRD_CENTER = "third-center",
+  THIRD_RIGHT = "third-right",
+  COL3_L25 = "col3-l25",
+  COL3_C50 = "col3-c50",
+  COL3_R25 = "col3-r25",
+  RIGHT_TOP_QUARTER = "right-t-q",
+  RIGHT_BOTTOM_QUARTER = "right-b-q",
 }
 
 export interface RoleConfig {
@@ -119,7 +118,9 @@ export interface User {
     volume: number;
     dockCollapsed: boolean;
     layout: DesktopLayout;
+    mode: OSMode;
     theme: Theme;
+    appThemes?: Record<string, Theme>;
   };
 }
 
@@ -145,6 +146,7 @@ export interface WindowState {
   width: number | string;
   height: number | string;
   scale: number;
+  theme?: Theme;
   preview?: string;
   prevX?: number;
   prevY?: number;
@@ -160,7 +162,7 @@ export interface UserSession {
 }
 
 export interface Message {
-  role: 'user' | 'model';
+  role: "user" | "model";
   content: string;
   timestamp: Date;
 }
@@ -173,36 +175,49 @@ export interface TopBarStore {
 export interface DockStore {
   dockCollapsed: boolean;
   launcherOpen: boolean;
-  geminiPanelOpen: boolean;
+  AIPanelOpen: boolean;
   notificationsOpen: boolean;
   profileOpen: boolean;
   workspacePanelOpen: boolean;
   launcherSearchQuery: string;
   setDockCollapsed: (collapsed: boolean) => void;
   setLauncherOpen: (open: boolean) => void;
-  setGeminiPanelOpen: (open: boolean) => void;
+  setAIPanelOpen: (open: boolean) => void;
   setNotificationsOpen: (open: boolean) => void;
   setProfileOpen: (open: boolean) => void;
   setWorkspacePanelOpen: (open: boolean) => void;
   setLauncherSearchQuery: (query: string) => void;
   toggleLauncher: () => void;
-  toggleGeminiPanel: () => void;
+  toggleAIPanel: () => void;
   toggleNotifications: () => void;
   toggleProfile: () => void;
   toggleWorkspacePanel: () => void;
   closeAllDockPanels: () => void;
 }
 
+export enum OSMode {
+  DESKTOP = "desktop",
+  MOBILE = "mobile",
+  TABLET = "tablet",
+  TV = "tv",
+  GAMING = "gaming",
+}
+
 export interface SphereState {
+  mode: OSMode;
+  layout: DesktopLayout;
+  manualMode: boolean;
+  // Legacy booleans for compatibility
   isMobile: boolean;
   isTablet: boolean;
   isTV: boolean;
   isGaming: boolean;
-  layout: DesktopLayout;
+  
   setIsMobile: (isMobile: boolean) => void;
   setIsTablet: (isTablet: boolean) => void;
-  setIsTV: (isTV: boolean) => void;
-  setIsGaming: (isGaming: boolean) => void;
+  setIsTV: (isTV) => void;
+  setIsGaming: (isGaming) => void;
+  setMode: (mode: OSMode) => void;
   setLayout: (layout: DesktopLayout) => void;
 }
 
@@ -227,7 +242,21 @@ export interface OSState {
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
   setBatteryStatus: (level: number, charging: boolean) => void;
-  setSettings: (settings: Partial<Pick<OSState, 'theme' | 'accentColor' | 'glassOpacity' | 'wifiEnabled' | 'bluetoothEnabled' | 'volume' | 'brightness' | 'inactivityTimeout'>>) => void;
+  setSettings: (
+    settings: Partial<
+      Pick<
+        OSState,
+        | "theme"
+        | "accentColor"
+        | "glassOpacity"
+        | "wifiEnabled"
+        | "bluetoothEnabled"
+        | "volume"
+        | "brightness"
+        | "inactivityTimeout"
+      >
+    >
+  ) => void;
   setSpotlightOpen: (open: boolean) => void;
   setControlCenterOpen: (open: boolean) => void;
   setCalendarOverlayOpen: (open: boolean) => void;
@@ -307,9 +336,23 @@ export interface WindowStore {
   activeWorkspaceId: string;
   activeInstanceId: string | null;
   sessions: Record<string, UserSession>; // Key is "userId:orgId"
-  
-  openWindow: (appId: AppId, forceNew?: boolean, launchArgs?: Record<string, any>) => void;
-  openChildWindow: (parentId: string, appId: AppId, config?: { title?: string, width?: number, height?: number, modal?: boolean }) => void;
+  snapPreview: { instanceId: string; type: SnapType } | null;
+
+  openWindow: (
+    appId: AppId,
+    forceNew?: boolean,
+    launchArgs?: Record<string, any>
+  ) => void;
+  openChildWindow: (
+    parentId: string,
+    appId: AppId,
+    config?: {
+      title?: string;
+      width?: number;
+      height?: number;
+      modal?: boolean;
+    }
+  ) => void;
   closeWindow: (instanceId: string) => void;
   minimizeWindow: (instanceId: string) => void;
   maximizeWindow: (instanceId: string) => void;
@@ -318,15 +361,21 @@ export interface WindowStore {
   blurWindows: () => void;
   minimizeAll: () => void;
   updateWindowPosition: (instanceId: string, x: number, y: number) => void;
-  updateWindowSize: (instanceId: string, width: number | string, height: number | string) => void;
+  updateWindowSize: (
+    instanceId: string,
+    width: number | string,
+    height: number | string
+  ) => void;
   updateWindowScale: (instanceId: string, scale: number) => void;
   updateWindowPreview: (instanceId: string, preview: string) => void;
+  setWindowTheme: (instanceId: string, theme: Theme | undefined) => void;
+  setSnapPreview: (preview: { instanceId: string; type: SnapType } | null) => void;
   setActiveWorkspace: (workspaceId: string) => void;
   addWorkspace: () => void;
   removeWorkspace: (workspaceId: string) => void;
   renameWorkspace: (workspaceId: string, name: string) => void;
   updateWorkspaceBackground: (workspaceId: string, background: string) => void;
-  
+
   loadSession: (userId: string, orgId: string) => void;
   clearAllSessions: () => void;
   _sync: () => void;

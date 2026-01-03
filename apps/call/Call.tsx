@@ -2,14 +2,14 @@
 import React, { useState } from 'react';
 import { Phone, PhoneOff, Mic, Video, Grid, User, Volume2 } from 'lucide-react';
 import { useOSStore } from '../../store/osStore';
+import { useTheme } from '../../components/Window';
 
 export const Call: React.FC = () => {
-  const { theme } = useOSStore();
+  const theme = useTheme();
+  const isDark = theme === 'dark';
   const [number, setNumber] = useState('');
   const [isCalling, setIsCalling] = useState(false);
-
-  const addDigit = (digit: string) => setNumber(prev => prev + digit);
-  const isDark = theme === 'dark';
+  const addDigit = (d: string) => setNumber(prev => (prev.length < 15 ? prev + d : prev));
 
   return (
     <div className={`h-full flex flex-col items-center justify-center p-8 ${isDark ? 'bg-black' : 'bg-white'}`}>

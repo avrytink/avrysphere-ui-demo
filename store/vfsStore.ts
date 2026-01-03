@@ -18,6 +18,8 @@ export interface VFSItem {
 
 interface VFSState {
   items: VFSItem[];
+  currentFolderId: string | null;
+  setCurrentFolderId: (id: string | null) => void;
   addItem: (item: Omit<VFSItem, 'id' | 'modified'>) => string;
   removeItem: (id: string) => void;
   renameItem: (id: string, newName: string) => void;
@@ -43,6 +45,9 @@ export const useVFSStore = create<VFSState>()(
   persist(
     (set, get) => ({
       items: INITIAL_ITEMS,
+      currentFolderId: 'root-home',
+
+      setCurrentFolderId: (id) => set({ currentFolderId: id }),
 
       addItem: (item) => {
         const id = Math.random().toString(36).substring(7);

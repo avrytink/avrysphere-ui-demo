@@ -6,15 +6,15 @@ import {
   Share2, Bookmark, Route, X, Filter
 } from 'lucide-react';
 import { useOSStore } from '../../store/osStore';
+import { useTheme } from '../../components/Window';
 
 export const Map: React.FC = () => {
-  const { theme } = useOSStore();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedPlace, setSelectedPlace] = useState<any>(null);
-  const [activeLayer, setActiveLayer] = useState<'standard' | 'satellite' | 'terrain'>('standard');
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
+  const theme = useTheme();
   const isDark = theme === 'dark';
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeLayer, setActiveLayer] = useState<'standard' | 'satellite'>('standard');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [selectedPlace, setSelectedPlace] = useState<any>(null);
 
   const categories = [
     { label: 'Restaurants', icon: Utensils, color: 'bg-orange-500' },

@@ -38,7 +38,7 @@ import { AppId } from "../types";
 // App Components imported from their dedicated feature subfolders
 import { AvryAI } from "../apps/avry-ai/AvryAI";
 import { Terminal } from "../apps/terminal/Terminal";
-import { Files } from "../apps/files/Files";
+import { Files, FilesWindowHeader } from "../apps/files/Files";
 import { Calculator } from "../apps/calculator/Calculator";
 import { Analytics } from "../apps/analytics/Analytics";
 import { Messages } from "../apps/messages/Messages";
@@ -126,6 +126,9 @@ export interface AppDefinition {
   gradient: string;
   component: React.ComponentType;
   headless?: boolean; // If true, app runs without a visible window frame
+  floatingHeader?: boolean; // If true, window header floats over content
+  hideFloatingTitle?: boolean; // If true, hide icon and title when floating
+  headerComponent?: React.ComponentType<{ win: any }>; // Custom elements in header
   iconImage?: string; // Optional real image to replace the icon/gradient
 }
 
@@ -148,6 +151,7 @@ export const APP_REGISTRY: Record<AppId, AppDefinition> = {
     gradient: "from-amber-400 to-orange-500",
     title: "File Explorer",
     iconImage: filesIcon,
+    headerComponent: FilesWindowHeader,
   },
   [AppId.TERMINAL]: {
     id: AppId.TERMINAL,
@@ -356,6 +360,8 @@ export const APP_REGISTRY: Record<AppId, AppDefinition> = {
     gradient: "from-red-600 to-orange-600",
     title: "Video Player",
     iconImage: videoPlayerIcon,
+    floatingHeader: true,
+    hideFloatingTitle: true,
   },
   [AppId.WEATHER]: {
     id: AppId.WEATHER,
@@ -454,9 +460,8 @@ export const APP_REGISTRY: Record<AppId, AppDefinition> = {
     icon: Gamepad2,
     gradient: "from-blue-400 to-purple-500",
     title: "Fortnite",
-    // Using a generic reliable placeholder for non-steam
     iconImage:
-      "https://cdn2.unrealengine.com/fortnite-battle-royale-chapter-4-season-4-key-art-1920x1080-6060024d2c20.jpg",
+      "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2000&auto=format&fit=crop", // High fidelity gaming setup
   },
 
   // Mode Switchers (Headless)

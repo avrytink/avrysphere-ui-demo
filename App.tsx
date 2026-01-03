@@ -7,13 +7,14 @@ import { useMediaStore } from './store/mediaStore';
 import { AuthScreen } from './components/AuthScreen';
 import { BootScreen } from './components/BootScreen';
 import { SphereSpace } from './components/SphereSpace';
+import { OSMode } from './types';
 
 const App: React.FC = () => {
   const [isBooting, setIsBooting] = useState(true);
   const [appReady, setAppReady] = useState(false);
   const { theme, accentColor, brightness, volume, setSettings, setBatteryStatus } = useOSStore();
-  const { setIsMobile, setIsTablet, setIsTV, setIsGaming } = useSphereStore();
-  const { isAuthenticated, isLocked, lockSession, currentUser } = useAuthStore();
+  const { setMode, setLayout, mode: currentMode, layout: currentLayout } = useSphereStore();
+  const { isAuthenticated, isLocked, lockSession, currentUser, updateUser } = useAuthStore();
   const { isPlaying, currentTrack, volume: mediaVolume, updateProgress, setPlaying } = useMediaStore();
 
   const inactivityTimerRef = useRef<number | null>(null);
@@ -49,42 +50,48 @@ const App: React.FC = () => {
     const handleResize = () => {
       clearTimeout(resizeTimer);
       resizeTimer = window.setTimeout(() => {
-        const width = window.innerWidth;
-        const mobile = width < 768;
         const sphereState = useSphereStore.getState();
-        
-        if (mobile !== sphereState.isMobile) {
-          setIsMobile(mobile);
-          if (mobile) {
-             setIsTablet(false);
-             setIsTV(false);
-             setIsGaming(false);
-          }
-        }
+        if (sphereState.manualMode) return; 
 
-        if (width >= 768 && width <= 1024 && !sphereState.isTablet && !sphereState.isTV && !sphereState.isGaming) {
-           setIsTablet(true);
+        const width = window.innerWidth;
+        if (width < 768) {
+          if (sphereState.mode !== OSMode.MOBILE) {
+            useSphereStore.getState().setIsMobile(true);
+          }
+        } else if (width >= 768 && width <= 1024) {
+          if (sphereState.mode !== OSMode.TABLET) {
+            useSphereStore.getState().setIsTablet(true);
+          }
+        } else {
+          if (sphereState.mode !== OSMode.DESKTOP) {
+            // Reset to Desktop
+            useSphereStore.setState({ 
+              mode: OSMode.DESKTOP, 
+              isMobile: false, isTablet: false, isTV: false, isGaming: false 
+            });
+          }
         }
       }, 150);
     };
     window.addEventListener('resize', handleResize);
+    handleResize();
     return () => window.removeEventListener('resize', handleResize);
-  }, [setIsMobile, setIsTablet]); 
+  }, []); 
 
-  // Sync user settings on login or profile change - BREAK THE LOOP
+  // 1. Sync Profile -> Store (On login or settings change)
   useEffect(() => {
     if (isAuthenticated && currentUser?.settings) {
       const s = currentUser.settings;
       const os = useOSStore.getState();
+      const sphere = useSphereStore.getState();
       
-      // Only call setSettings if the values are actually different to prevent Error #185
-      const hasChanged = 
+      const osChanged = 
         s.theme !== os.theme || 
         s.accentColor !== os.accentColor || 
         s.brightness !== os.brightness || 
         s.volume !== os.volume;
 
-      if (hasChanged) {
+      if (osChanged) {
         setSettings({
           theme: s.theme,
           accentColor: s.accentColor,
@@ -92,8 +99,34 @@ const App: React.FC = () => {
           volume: s.volume
         });
       }
+
+      if (s.layout && s.layout !== sphere.layout) {
+        setLayout(s.layout);
+      }
+
+      if (s.mode && s.mode !== sphere.mode) {
+        setMode(s.mode);
+      }
     }
-  }, [isAuthenticated, currentUser?.id, currentUser?.settings?.theme, currentUser?.settings?.accentColor]);
+  }, [isAuthenticated, currentUser?.id, currentUser?.settings?.theme, currentUser?.settings?.accentColor, currentUser?.settings?.layout, currentUser?.settings?.mode]);
+
+  // 2. Sync Store -> Profile (When mode or layout changes in the store)
+  useEffect(() => {
+    if (isAuthenticated && currentUser) {
+      const { mode, layout } = useSphereStore.getState();
+      const s = currentUser.settings;
+      
+      if (mode !== s?.mode || layout !== s?.layout) {
+        updateUser({
+          settings: {
+            ...s,
+            mode,
+            layout,
+          } as any
+        });
+      }
+    }
+  }, [currentMode, currentLayout, isAuthenticated]);
 
   useEffect(() => {
     const timer = setTimeout(() => setAppReady(true), 1500); 
@@ -128,7 +161,7 @@ const App: React.FC = () => {
     if (!isAuthenticated || isLocked || isBooting) return;
     const resetTimer = () => {
       if (inactivityTimerRef.current) window.clearTimeout(inactivityTimerRef.current);
-      inactivityTimerRef.current = window.setTimeout(() => lockSession(), 10 * 60 * 1000);
+      inactivityTimerRef.current = window.setTimeout(() => lockSession(), 20 * 60 * 1000);
     };
     window.addEventListener('mousemove', resetTimer);
     window.addEventListener('keydown', resetTimer);

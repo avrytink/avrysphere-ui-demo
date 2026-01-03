@@ -1,9 +1,10 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useOSStore } from '../../store/osStore';
+import { useTheme } from '../../components/Window';
 
 export const Terminal: React.FC = () => {
-  const { theme } = useOSStore();
+  const theme = useTheme();
   const [history, setHistory] = useState<string[]>([
     'avryOS Kernel 6.5.0-v11-amd64 x86_64',
     'Welcome to avryOS Terminal.',

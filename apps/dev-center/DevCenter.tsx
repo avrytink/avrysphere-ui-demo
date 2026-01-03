@@ -2,9 +2,10 @@
 import React from 'react';
 import { Layout, Cpu, Activity, Database, GitBranch, Terminal } from 'lucide-react';
 import { useOSStore } from '../../store/osStore';
+import { useTheme } from '../../components/Window';
 
 export const DevCenter: React.FC = () => {
-  const { theme } = useOSStore();
+  const theme = useTheme();
   const isDark = theme === 'dark';
 
   const projects = [
@@ -83,7 +84,7 @@ export const DevCenter: React.FC = () => {
             <div>[10:42:05] auth: session started for user: admin</div>
             <div>[10:43:12] gemini: analyzing workspace...</div>
             <div>[10:44:00] system: deploy successful</div>
-            <div className="text-emerald-500 animate-pulse">> Ready</div>
+            <div className="text-emerald-500 animate-pulse">{">"} Ready</div>
           </div>
         </div>
       </div>

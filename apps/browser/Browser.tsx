@@ -1,9 +1,12 @@
 
 import React from 'react';
 import { useOSStore } from '../../store/osStore';
+import { useWindowStore } from '../../store/windowStore';
+import { useTheme } from '../../components/Window';
 
 export const Browser: React.FC = () => {
-  const { theme } = useOSStore();
+  const theme = useTheme();
+  const { windows, activeInstanceId } = useWindowStore();
   const isDark = theme === 'dark';
 
   return (

@@ -1,7 +1,7 @@
 
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { AuthStore, User, DesktopLayout } from '../types';
+import { AuthStore, User, DesktopLayout, OSMode } from '../types';
 import { useUserStore } from './userStore';
 import { useOSStore } from './osStore';
 import { useSphereStore } from './sphereStore';
@@ -59,6 +59,9 @@ export const useAuthStore = create<AuthStore>()(
         });
         
         sphereStore.setLayout(user.settings?.layout ?? sphereStore.layout);
+        if (user.settings?.mode) {
+          sphereStore.setMode(user.settings.mode);
+        }
         
         dockStore.setDockCollapsed(user.settings?.dockCollapsed ?? dockStore.dockCollapsed);
         osStore.closeAllOSPanels();

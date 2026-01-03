@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import { Cloud, Server, Database, Lock, Globe, Shield, CheckCircle2, Loader2 } from 'lucide-react';
 import { useVFSStore } from '../../store/vfsStore';
 import { useOSStore } from '../../store/osStore';
+import { useTheme } from '../../components/Window';
 
 export const StorageProvisioner: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
-  const { theme } = useOSStore();
+  const theme = useTheme();
   const { addItem } = useVFSStore();
   const [step, setStep] = useState<'select' | 'configure' | 'syncing'>('select');
   const [selectedProvider, setSelectedProvider] = useState<'s3' | 'dropbox' | 'mega' | null>(null);

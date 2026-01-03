@@ -2,9 +2,10 @@
 import React, { useState } from 'react';
 import { Send, Search, MoreVertical, User } from 'lucide-react';
 import { useOSStore } from '../../store/osStore';
+import { useTheme } from '../../components/Window';
 
 export const Messages: React.FC = () => {
-  const { theme } = useOSStore();
+  const theme = useTheme();
   const [activeChat, setActiveChat] = useState(0);
   const contacts = [
     { name: 'ALEX R.', last: 'The kernel is stable.', time: '10:42', unread: 2 },

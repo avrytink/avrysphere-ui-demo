@@ -1,14 +1,17 @@
 
 import React, { useState, useRef, useEffect } from 'react';
+import { Cpu, RefreshCcw, Check, Copy, Loader2, ArrowUp } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { GeminiService } from '../../services/gemini';
 import { Message } from '../../types';
 import { useOSStore } from '../../store/osStore';
-import { Send, User, Loader2, RefreshCcw, Cpu, Copy, Check, ArrowUp } from 'lucide-react';
+import { useTheme } from '../../components/Window';
+import { useDockStore } from '../../store/dockStore';
 
 export const AvryAI: React.FC = () => {
-  const { theme } = useOSStore();
+  const theme = useTheme();
+  const { accentColor } = useOSStore();
   const [messages, setMessages] = useState<Message[]>([
     { role: 'model', content: "Hello! I'm Avry AI, the intelligence core for your system. How can I help you today?", timestamp: new Date() }
   ]);

@@ -2,12 +2,12 @@
 import React, { useState } from 'react';
 import { Save, FileText, Share2 } from 'lucide-react';
 import { useOSStore } from '../../store/osStore';
+import { useTheme } from '../../components/Window';
 
 export const TextEditor: React.FC = () => {
-  const { theme } = useOSStore();
-  const [content, setContent] = useState(`# avryOS Notes\n\n- System architecture finalized\n- Ubuntu Unity layout implemented\n- Windows 11 aesthetics applied\n- Gemini AI integrated via core services\n\nBuild: 1.0.0-STABLE`);
-
+  const theme = useTheme();
   const isDark = theme === 'dark';
+  const [content, setContent] = useState(`# avryOS Notes\n\n- System architecture finalized\n- Ubuntu Unity layout implemented\n- Windows 11 aesthetics applied\n- Gemini AI integrated via core services\n\nBuild: 1.0.0-STABLE`);
 
   return (
     <div className={`h-full flex flex-col font-mono ${isDark ? 'bg-[#050505]' : 'bg-white'}`}>
